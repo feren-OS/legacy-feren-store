@@ -61,7 +61,7 @@ if os.getuid() == 0:
     sys.exit(1)
 
 # i18n
-APP = 'mintinstall'
+APP = 'feren-store'
 LOCALE_DIR = "/usr/share/linuxmint/locale"
 locale.bindtextdomain(APP, LOCALE_DIR)
 gettext.bindtextdomain(APP, LOCALE_DIR)
@@ -71,7 +71,7 @@ _ = gettext.gettext
 import setproctitle
 setproctitle.setproctitle("feren-store")
 
-Gtk.IconTheme.get_default().append_search_path("/usr/share/linuxmint/mintinstall")
+Gtk.IconTheme.get_default().append_search_path("/usr/share/feren-store")
 
 # List of aliases
 ALIASES = {}
@@ -98,7 +98,7 @@ ALIASES['feren-store'] = "Feren Store"
 ALIASES['pantheon-photos'] = "Photos"
 ALIASES['kclock'] = "Clock"
 
-libdir = os.path.join("/usr/lib/linuxmint/mintinstall")
+libdir = os.path.join("/usr/lib/feren-store")
 
 with open(os.path.join(libdir, "apt_flatpak_match_data.info")) as f:
     match_data = json.load(f)
@@ -321,7 +321,7 @@ class BannerTile(Gtk.FlowBoxChild):
         self.background = background
         self.color = color
 
-        self.image_uri = (f"/usr/share/linuxmint/mintinstall/featured/{name}.png")
+        self.image_uri = (f"/usr/share/feren-store/featured/{name}.png")
 
         css = """
 #BannerTile {
@@ -381,7 +381,7 @@ class BannerTile(Gtk.FlowBoxChild):
         if self.is_flatpak:
             box_flatpak = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
             box_flatpak.get_style_context().add_provider(style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
-            box_flatpak.pack_start(Gtk.Image.new_from_icon_name("mintinstall-package-flatpak-symbolic", Gtk.IconSize.MENU), False, False, 0)
+            box_flatpak.pack_start(Gtk.Image.new_from_icon_name("feren-store-package-flatpak-symbolic", Gtk.IconSize.MENU), False, False, 0)
             label_flatpak = Gtk.Label(label="Flathub")
             label_flatpak.set_name("BannerFlatpakLabel")
             label_flatpak.get_style_context().add_provider(style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
@@ -418,7 +418,7 @@ class PackageTile(Gtk.FlowBoxChild):
                 self.pkg_category = pkginfo.categories[1]
 
 
-        glade_file = "/usr/share/linuxmint/mintinstall/package-tile.glade"
+        glade_file = "/usr/share/feren-store/package-tile.glade"
 
         self.builder = Gtk.Builder()
         self.builder.add_from_file(glade_file)
@@ -469,7 +469,7 @@ class PackageTile(Gtk.FlowBoxChild):
                 if remote_info is None:
                     self.package_type_name.set_label(self.pkginfo.remote.capitalize())
 
-                self.package_type_emblem.set_from_icon_name("mintinstall-package-flatpak-symbolic", Gtk.IconSize.MENU)
+                self.package_type_emblem.set_from_icon_name("feren-store-package-flatpak-symbolic", Gtk.IconSize.MENU)
                 self.package_type_box.show()
                 self.package_type_box.set_tooltip_text(_("This package is a Flatpak"))
             else:
@@ -493,7 +493,7 @@ class PackageTile(Gtk.FlowBoxChild):
         self.installed = self.installer.pkginfo_is_installed(self.pkginfo)
 
         if self.installed:
-            self.installed_mark.set_from_icon_name("mintinstall-installed", Gtk.IconSize.MENU)
+            self.installed_mark.set_from_icon_name("feren-store-installed", Gtk.IconSize.MENU)
         else:
             self.installed_mark.clear()
 
@@ -576,7 +576,7 @@ class SubcategoryFlowboxChild(Gtk.FlowBoxChild):
         cat_icon = category.icon_name
         if is_all:
             cat_name = _("All")
-            cat_icon = "mintinstall-all-symbolic"
+            cat_icon = "feren-store-all-symbolic"
 
         self.button = Gtk.ToggleButton(active=active)
 
@@ -825,7 +825,7 @@ class Application(Gtk.Application):
             return
 
         # Build the GUI
-        glade_file = "/usr/share/linuxmint/mintinstall/mintinstall.glade"
+        glade_file = "/usr/share/feren-store/feren-store.glade"
 
         self.builder = Gtk.Builder()
         self.builder.set_translation_domain(APP)
@@ -1118,7 +1118,7 @@ class Application(Gtk.Application):
                           valign=Gtk.Align.END)
         overlay.add_overlay(self.banner_dot_box)
 
-        json_array = json.load(open("/usr/share/linuxmint/mintinstall/featured/featured.json", "r"))
+        json_array = json.load(open("/usr/share/feren-store/featured/featured.json", "r"))
         random.shuffle(json_array)
 
         selected_apps = set()
@@ -1167,7 +1167,7 @@ class Application(Gtk.Application):
             flowbox.show_all()
             self.banner_stack.add_named(flowbox, str(len(self.banner_stack.get_children())))
 
-            icon = Gtk.Image.new_from_icon_name("mintinstall-banner-dot", Gtk.IconSize.MENU)
+            icon = Gtk.Image.new_from_icon_name("feren-store-banner-dot", Gtk.IconSize.MENU)
             icon.set_pixel_size(5)
 
             button_class_override = """
@@ -1232,11 +1232,11 @@ class Application(Gtk.Application):
     def update_dot_buttons(self, current_index):
         for i, button in enumerate(self.banner_dot_box.get_children()):
             if i == current_index: #Bigger do if current slide
-                icon = Gtk.Image.new_from_icon_name("mintinstall-banner-dot", Gtk.IconSize.MENU)
+                icon = Gtk.Image.new_from_icon_name("feren-store-banner-dot", Gtk.IconSize.MENU)
                 icon.set_pixel_size(10)
                 button.set_image(icon)
             else:
-                icon = Gtk.Image.new_from_icon_name("mintinstall-banner-dot", Gtk.IconSize.MENU)
+                icon = Gtk.Image.new_from_icon_name("feren-store-banner-dot", Gtk.IconSize.MENU)
                 icon.set_pixel_size(5)
                 button.set_image(icon)
 
@@ -1315,7 +1315,7 @@ class Application(Gtk.Application):
             child.destroy()
 
         apps = []
-        featured_list = self.file_to_array("/usr/share/linuxmint/mintinstall/categories/picks.list")
+        featured_list = self.file_to_array("/usr/share/feren-store/categories/picks.list")
         for name in featured_list:
             if name.startswith("flatpak:"):
                 name = name.replace("flatpak:", "")
@@ -1935,128 +1935,128 @@ class Application(Gtk.Application):
 
         self.active_tasks_category = Category(_("Currently working on the following packages"), None, None)
 
-        self.flatpak_category = Category("Flatpak", None, self.categories, "mintinstall-package-flatpak-symbolic")
+        self.flatpak_category = Category("Flatpak", None, self.categories, "feren-store-package-flatpak-symbolic")
 
         # INTERNET
-        category = Category(_("Internet"), None, self.categories, "mintinstall-web-symbolic")
+        category = Category(_("Internet"), None, self.categories, "feren-store-web-symbolic")
 
-        subcat = Category(_("Web"), category, self.categories, "mintinstall-web-symbolic")
+        subcat = Category(_("Web"), category, self.categories, "feren-store-web-symbolic")
         self.sections["web"] = subcat
         self.sections["net"] = subcat
-        subcat.matchingPackages = self.file_to_array("/usr/share/linuxmint/mintinstall/categories/internet-web.list")
+        subcat.matchingPackages = self.file_to_array("/usr/share/feren-store/categories/internet-web.list")
 
-        subcat = Category(_("Email"), category, self.categories, "mintinstall-email-symbolic")
+        subcat = Category(_("Email"), category, self.categories, "feren-store-email-symbolic")
         self.sections["mail"] = subcat
-        subcat.matchingPackages = self.file_to_array("/usr/share/linuxmint/mintinstall/categories/internet-email.list")
+        subcat.matchingPackages = self.file_to_array("/usr/share/feren-store/categories/internet-email.list")
 
-        subcat = Category(_("Chat"), category, self.categories, "mintinstall-chat-symbolic")
-        subcat.matchingPackages = self.file_to_array("/usr/share/linuxmint/mintinstall/categories/internet-chat.list")
+        subcat = Category(_("Chat"), category, self.categories, "feren-store-chat-symbolic")
+        subcat.matchingPackages = self.file_to_array("/usr/share/feren-store/categories/internet-chat.list")
 
-        subcat = Category(_("File sharing"), category, self.categories, "mintinstall-share-symbolic")
-        subcat.matchingPackages = self.file_to_array("/usr/share/linuxmint/mintinstall/categories/internet-filesharing.list")
+        subcat = Category(_("File sharing"), category, self.categories, "feren-store-share-symbolic")
+        subcat.matchingPackages = self.file_to_array("/usr/share/feren-store/categories/internet-filesharing.list")
 
         self.root_categories[category.name] = category
 
         # SOUND AND VIDEO
-        category = Category(_("Sound and video"), None, self.categories, "mintinstall-music-symbolic")
-        category.matchingPackages = self.file_to_array("/usr/share/linuxmint/mintinstall/categories/sound-video.list")
-        subcat = Category(_("Sound"), category, self.categories, "mintinstall-music-symbolic")
+        category = Category(_("Sound and video"), None, self.categories, "feren-store-music-symbolic")
+        category.matchingPackages = self.file_to_array("/usr/share/feren-store/categories/sound-video.list")
+        subcat = Category(_("Sound"), category, self.categories, "feren-store-music-symbolic")
         self.sections["sound"] = subcat
-        subcat = Category(_("Video"), category, self.categories, "mintinstall-video-symbolic")
+        subcat = Category(_("Video"), category, self.categories, "feren-store-video-symbolic")
         self.sections["video"] = subcat
         self.root_categories[category.name] = category
 
         # GRAPHICS
-        category = Category(_("Graphics"), None, self.categories, "mintinstall-drawing-symbolic")
+        category = Category(_("Graphics"), None, self.categories, "feren-store-drawing-symbolic")
         self.sections["graphics"] = category
-        category.matchingPackages = self.file_to_array("/usr/share/linuxmint/mintinstall/categories/graphics.list")
+        category.matchingPackages = self.file_to_array("/usr/share/feren-store/categories/graphics.list")
 
-        subcat = Category(_("3D"), category, self.categories, "mintinstall-3d-symbolic")
-        subcat.matchingPackages = self.file_to_array("/usr/share/linuxmint/mintinstall/categories/graphics-3d.list")
-        subcat = Category(_("Drawing"), category, self.categories, "mintinstall-drawing-symbolic")
-        subcat.matchingPackages = self.file_to_array("/usr/share/linuxmint/mintinstall/categories/graphics-drawing.list")
-        subcat = Category(_("Photography"), category, self.categories, "mintinstall-photo-symbolic")
-        subcat.matchingPackages = self.file_to_array("/usr/share/linuxmint/mintinstall/categories/graphics-photography.list")
-        subcat = Category(_("Publishing"), category, self.categories, "mintinstall-publishing-symbolic")
-        subcat.matchingPackages = self.file_to_array("/usr/share/linuxmint/mintinstall/categories/graphics-publishing.list")
-        subcat = Category(_("Scanning"), category, self.categories, "mintinstall-scanning-symbolic")
-        subcat.matchingPackages = self.file_to_array("/usr/share/linuxmint/mintinstall/categories/graphics-scanning.list")
-        subcat = Category(_("Viewers"), category, self.categories, "mintinstall-viewers-symbolic")
-        subcat.matchingPackages = self.file_to_array("/usr/share/linuxmint/mintinstall/categories/graphics-viewers.list")
+        subcat = Category(_("3D"), category, self.categories, "feren-store-3d-symbolic")
+        subcat.matchingPackages = self.file_to_array("/usr/share/feren-store/categories/graphics-3d.list")
+        subcat = Category(_("Drawing"), category, self.categories, "feren-store-drawing-symbolic")
+        subcat.matchingPackages = self.file_to_array("/usr/share/feren-store/categories/graphics-drawing.list")
+        subcat = Category(_("Photography"), category, self.categories, "feren-store-photo-symbolic")
+        subcat.matchingPackages = self.file_to_array("/usr/share/feren-store/categories/graphics-photography.list")
+        subcat = Category(_("Publishing"), category, self.categories, "feren-store-publishing-symbolic")
+        subcat.matchingPackages = self.file_to_array("/usr/share/feren-store/categories/graphics-publishing.list")
+        subcat = Category(_("Scanning"), category, self.categories, "feren-store-scanning-symbolic")
+        subcat.matchingPackages = self.file_to_array("/usr/share/feren-store/categories/graphics-scanning.list")
+        subcat = Category(_("Viewers"), category, self.categories, "feren-store-viewers-symbolic")
+        subcat.matchingPackages = self.file_to_array("/usr/share/feren-store/categories/graphics-viewers.list")
         self.root_categories[category.name] = category
 
         # OFFICE
-        category = Category(_("Office"), None, self.categories, "mintinstall-office-symbolic")
+        category = Category(_("Office"), None, self.categories, "feren-store-office-symbolic")
         self.sections["office"] = category
         self.sections["editors"] = category
         self.root_categories[category.name] = category
 
         # GAMES
-        category = Category(_("Games"), None, self.categories, "mintinstall-games-symbolic")
+        category = Category(_("Games"), None, self.categories, "feren-store-games-symbolic")
         self.sections["games"] = category
-        category.matchingPackages = self.file_to_array("/usr/share/linuxmint/mintinstall/categories/games.list")
+        category.matchingPackages = self.file_to_array("/usr/share/feren-store/categories/games.list")
 
-        subcat = Category(_("Board games"), category, self.categories, "mintinstall-board-symbolic")
-        subcat.matchingPackages = self.file_to_array("/usr/share/linuxmint/mintinstall/categories/games-board.list")
-        subcat = Category(_("First-person"), category, self.categories, "mintinstall-fps-symbolic")
-        subcat.matchingPackages = self.file_to_array("/usr/share/linuxmint/mintinstall/categories/games-fps.list")
-        subcat = Category(_("Real-time strategy"), category, self.categories, "mintinstall-rts-symbolic")
-        subcat.matchingPackages = self.file_to_array("/usr/share/linuxmint/mintinstall/categories/games-rts.list")
-        subcat = Category(_("Turn-based strategy"), category, self.categories, "mintinstall-tbs-symbolic")
-        subcat.matchingPackages = self.file_to_array("/usr/share/linuxmint/mintinstall/categories/games-tbs.list")
-        subcat = Category(_("Emulators"), category, self.categories, "mintinstall-emulator-symbolic")
-        subcat.matchingPackages = self.file_to_array("/usr/share/linuxmint/mintinstall/categories/games-emulators.list")
-        subcat = Category(_("Simulation and racing"), category, self.categories, "mintinstall-sim-symbolic")
-        subcat.matchingPackages = self.file_to_array("/usr/share/linuxmint/mintinstall/categories/games-simulations.list")
+        subcat = Category(_("Board games"), category, self.categories, "feren-store-board-symbolic")
+        subcat.matchingPackages = self.file_to_array("/usr/share/feren-store/categories/games-board.list")
+        subcat = Category(_("First-person"), category, self.categories, "feren-store-fps-symbolic")
+        subcat.matchingPackages = self.file_to_array("/usr/share/feren-store/categories/games-fps.list")
+        subcat = Category(_("Real-time strategy"), category, self.categories, "feren-store-rts-symbolic")
+        subcat.matchingPackages = self.file_to_array("/usr/share/feren-store/categories/games-rts.list")
+        subcat = Category(_("Turn-based strategy"), category, self.categories, "feren-store-tbs-symbolic")
+        subcat.matchingPackages = self.file_to_array("/usr/share/feren-store/categories/games-tbs.list")
+        subcat = Category(_("Emulators"), category, self.categories, "feren-store-emulator-symbolic")
+        subcat.matchingPackages = self.file_to_array("/usr/share/feren-store/categories/games-emulators.list")
+        subcat = Category(_("Simulation and racing"), category, self.categories, "feren-store-sim-symbolic")
+        subcat.matchingPackages = self.file_to_array("/usr/share/feren-store/categories/games-simulations.list")
         self.root_categories[category.name] = category
 
         # ACCESSORIES
-        category = Category(_("Accessories"), None, self.categories, "mintinstall-accessories-symbolic")
+        category = Category(_("Accessories"), None, self.categories, "feren-store-accessories-symbolic")
         self.sections["accessories"] = category
         self.sections["utils"] = category
         self.root_categories[category.name] = category
 
         # SYSTEM TOOLS
-        category = Category(_("System tools"), None, self.categories, "mintinstall-system-symbolic")
+        category = Category(_("System tools"), None, self.categories, "feren-store-system-symbolic")
         self.sections["system"] = category
         self.sections["admin"] = category
-        category.matchingPackages = self.file_to_array("/usr/share/linuxmint/mintinstall/categories/system-tools.list")
+        category.matchingPackages = self.file_to_array("/usr/share/feren-store/categories/system-tools.list")
         self.root_categories[category.name] = category
 
         # FONTS
-        category = Category(_("Fonts"), None, self.categories, "mintinstall-fonts-symbolic")
+        category = Category(_("Fonts"), None, self.categories, "feren-store-fonts-symbolic")
         self.sections["fonts"] = category
-        category.matchingPackages = self.file_to_array("/usr/share/linuxmint/mintinstall/categories/fonts.list")
+        category.matchingPackages = self.file_to_array("/usr/share/feren-store/categories/fonts.list")
         self.root_categories[category.name] = category
 
         # EDUCATION
-        category = Category(_("Science and Education"), None, self.categories, "mintinstall-science-symbolic")
-        subcat = Category(_("Science"), category, self.categories, "mintinstall-science-symbolic")
+        category = Category(_("Science and Education"), None, self.categories, "feren-store-science-symbolic")
+        subcat = Category(_("Science"), category, self.categories, "feren-store-science-symbolic")
         self.sections["science"] = subcat
-        subcat = Category(_("Maths"), category, self.categories, "mintinstall-maths-symbolic")
+        subcat = Category(_("Maths"), category, self.categories, "feren-store-maths-symbolic")
         self.sections["math"] = subcat
-        subcat = Category(_("Education"), category, self.categories, "mintinstall-education-symbolic")
+        subcat = Category(_("Education"), category, self.categories, "feren-store-education-symbolic")
         self.sections["education"] = subcat
-        subcat = Category(_("Electronics"), category, self.categories, "mintinstall-electronic-symbolic")
+        subcat = Category(_("Electronics"), category, self.categories, "feren-store-electronic-symbolic")
         self.sections["electronics"] = subcat
-        category.matchingPackages = self.file_to_array("/usr/share/linuxmint/mintinstall/categories/education.list")
+        category.matchingPackages = self.file_to_array("/usr/share/feren-store/categories/education.list")
         self.root_categories[category.name] = category
 
         # PROGRAMMING
-        category = Category(_("Programming"), None, self.categories, "mintinstall-programming-symbolic")
+        category = Category(_("Programming"), None, self.categories, "feren-store-programming-symbolic")
         self.sections["devel"] = category
-        subcat = Category(_("Java"), category, self.categories, "mintinstall-java-symbolic")
+        subcat = Category(_("Java"), category, self.categories, "feren-store-java-symbolic")
         self.sections["java"] = subcat
-        subcat = Category(_("PHP"), category, self.categories, "mintinstall-php-symbolic")
+        subcat = Category(_("PHP"), category, self.categories, "feren-store-php-symbolic")
         self.sections["php"] = subcat
-        subcat = Category(_("Python"), category, self.categories, "mintinstall-python-symbolic")
+        subcat = Category(_("Python"), category, self.categories, "feren-store-python-symbolic")
         self.sections["python"] = subcat
         subcat = Category(_("Essentials"), category, self.categories, "xapp-favorites-app-symbolic")
-        subcat.matchingPackages = self.file_to_array("/usr/share/linuxmint/mintinstall/categories/development-essentials.list")
+        subcat.matchingPackages = self.file_to_array("/usr/share/feren-store/categories/development-essentials.list")
         self.root_categories[category.name] = category
 
         # ALL
-        self.all_category = Category(_("All Applications"), None, self.categories, "mintinstall-all-symbolic")
+        self.all_category = Category(_("All Applications"), None, self.categories, "feren-store-all-symbolic")
         for cat in self.categories:
             self.all_category.matchingPackages.extend(cat.matchingPackages)
         sorted(self.all_category.matchingPackages)
@@ -2653,7 +2653,7 @@ class Application(Gtk.Application):
             for remote in self.installer.list_flatpak_remotes():
                 row_pkginfo = self.installer.find_pkginfo(a_flatpak.name, installer.PKG_TYPE_FLATPAK, remote=remote.name)
                 if row_pkginfo:
-                    row = [i, _("Flatpak (%s)") % remote.title, remote.summary, "mintinstall-package-flatpak-symbolic", row_pkginfo]
+                    row = [i, _("Flatpak (%s)") % remote.title, remote.summary, "feren-store-package-flatpak-symbolic", row_pkginfo]
                     iter = self.package_type_store.append(row)
                     if pkginfo == row_pkginfo:
                         to_use_iter = iter
@@ -2913,7 +2913,7 @@ class Application(Gtk.Application):
             else:
                 action_button_label = _("Install")
                 if pkginfo.pkg_hash.startswith("f"):
-                    action_button_icon = "mintinstall-package-flatpak-symbolic"
+                    action_button_icon = "feren-store-package-flatpak-symbolic"
                 else:
                     action_button_icon = "linuxmint-logo-badge-symbolic"
 
