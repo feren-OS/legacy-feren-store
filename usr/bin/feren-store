@@ -4,7 +4,7 @@ import subprocess
 import os
 
 # Remove any obsolete configuration file
-obsolete_path = os.path.expanduser("~/.config/autostart/mintinstall-update-flatpak.desktop")
+obsolete_path = os.path.expanduser("~/.config/autostart/feren-store-update-flatpak.desktop")
 if os.path.exists(obsolete_path):
 	try:
 		os.unlink(obsolete_path)

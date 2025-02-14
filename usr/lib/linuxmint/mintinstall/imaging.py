@@ -14,7 +14,7 @@ import prefs
 
 SCREENSHOT_DIR = os.path.join(GLib.get_user_cache_dir(), "mintinstall", "screenshots")
 FLATHUB_MEDIA_BASE_URL = "https://dl.flathub.org/media/"
-FALLBACK_PACKAGE_ICON_PATH = "/usr/share/linuxmint/mintinstall/data/fallback-package-icon.svg"
+FALLBACK_PACKAGE_ICON_PATH = "/usr/share/linuxmint/mintinstall/data/store-missing-icon.svg"
 
 ADDON_ICON_SIZE = 24
 LIST_ICON_SIZE = 48
