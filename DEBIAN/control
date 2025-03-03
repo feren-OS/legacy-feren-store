@@ -1,5 +1,5 @@
 Package: feren-store
-Version: 2025.02.0.0.0+ubrel3
+Version: 2025.02.0.0.2+ubrel3
 Architecture: all
 Maintainer: Feren OS Team <ferenos@outlook.com>
 Pre-Depends: ca-certificates (>= 20210101), feren-store-repos
