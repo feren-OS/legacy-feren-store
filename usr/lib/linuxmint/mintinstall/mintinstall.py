@@ -46,7 +46,7 @@ SCREENSHOT_WIDTH = 624
 from math import pi
 DEGREES = pi / 180
 
-FALLBACK_PACKAGE_ICON_PATH = "/usr/share/linuxmint/mintinstall/data/available.png"
+FALLBACK_PACKAGE_ICON_PATH = "/usr/share/linuxmint/mintinstall/data/store-missing-icon.svg"
 FLATHUB_MEDIA_BASE_URL = "https://dl.flathub.org/media/"
 
 #Hardcoded mouse back button key for button-press-event
@@ -82,7 +82,7 @@ gettext.textdomain(APP)
 _ = gettext.gettext
 
 import setproctitle
-setproctitle.setproctitle("mintinstall")
+setproctitle.setproctitle("feren-store")
 
 SCREENSHOT_DIR = os.path.join(GLib.get_user_cache_dir(), "mintinstall", "screenshots")
 
@@ -92,24 +92,26 @@ Gtk.IconTheme.get_default().append_search_path("/usr/share/linuxmint/mintinstall
 ALIASES = {}
 ALIASES['spotify-client'] = "Spotify"
 ALIASES['steam-launcher'] = "Steam"
-ALIASES['minecraft-launcher'] = "Minecraft"
-ALIASES['virtualbox-qt'] = "Virtualbox " # Added a space to force alias
-ALIASES['virtualbox'] = "Virtualbox (base)"
-ALIASES['sublime-text'] = "Sublime"
-ALIASES['mint-meta-codecs'] = _("Multimedia Codecs")
-ALIASES['mint-meta-codecs-kde'] = _("Multimedia Codecs for KDE")
-ALIASES['mint-meta-debian-codecs'] = _("Multimedia Codecs")
-ALIASES['firefox'] = "Firefox"
+ALIASES['minecraft-installer'] = "Minecraft"
+ALIASES['virtualbox-qt'] = "VirtualBox"
+ALIASES['virtualbox'] = "VirtualBox (base)"
+ALIASES['sublime-text'] = "Sublime Text"
+ALIASES['feren-meta-codecs'] = _("Multimedia Codecs")
 ALIASES['vlc'] = "VLC"
-ALIASES['mpv'] = "Mpv"
-ALIASES['gimp'] = "Gimp"
+ALIASES['gimp'] = "GIMP"
 ALIASES['gnome-maps'] = "GNOME Maps"
-ALIASES['thunderbird'] = "Thunderbird"
-ALIASES['pia-manager'] = "PIA Manager"
 ALIASES['skypeforlinux'] = "Skype"
 ALIASES['google-earth-pro-stable'] = "Google Earth"
 ALIASES['whatsapp-desktop'] = "WhatsApp"
-ALIASES['wine-installer'] = "Wine"
+ALIASES['google-chrome-stable'] = "Google Chrome"
+ALIASES['vivaldi-stable'] = "Vivaldi"
+ALIASES['winehq-stable'] = "Wine"
+ALIASES['wine'] = "Wine (Older Version)"
+ALIASES['feren-transfer-tool'] = "Transfer Tool"
+ALIASES['feren-maintenance'] = "Feren OS System Maintenance"
+ALIASES['feren-store'] = "Feren Store"
+ALIASES['pantheon-photos'] = "Photos"
+ALIASES['kclock'] = "Clock"
 
 libdir = os.path.join("/usr/lib/linuxmint/mintinstall")
 
@@ -598,7 +600,7 @@ class BannerTile(Gtk.FlowBoxChild):
         self.pkginfo = pkginfo
         self.installer = installer
 
-        image_uri = (f"/usr/share/linuxmint/mintinstall/featured/{name}.svg")
+        image_uri = (f"/usr/share/linuxmint/mintinstall/featured/{name}.png")
         background = app_json["background"]
         color = app_json["text_color"]
 
@@ -642,7 +644,9 @@ class BannerTile(Gtk.FlowBoxChild):
         label_summary.set_label(self.installer.get_summary(pkginfo))
         label_summary.set_name("BannerSummary")
 
-        image = Gtk.Image.new_from_file(image_uri)
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file(image_uri)
+        pixbuf = pixbuf.scale_simple(128, 128, GdkPixbuf.InterpType.BILINEAR)
+        image = Gtk.Image.new_from_pixbuf(pixbuf)
 
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12, halign=Gtk.Align.START)
         vbox.set_border_width(6)
@@ -1119,7 +1123,7 @@ class Application(Gtk.Application):
 
         # If it's less than our threshold than consider us 'low res'. The workarea being used is in
         # app pixels, so hidpi will also be affected here regardless of device resolution.
-        if height < 800:
+        if height < 710:
             print("MintInstall: low resolution detected (%dpx height), limiting window height." % (height))
             return True
 
@@ -1138,10 +1142,10 @@ class Application(Gtk.Application):
         self.builder.add_from_file(glade_file)
 
         self.main_window = self.builder.get_object("main_window")
-        self.main_window.set_title(_("Software Manager"))
-        GLib.set_application_name(_("Software Manager"))
+        self.main_window.set_title(_("Store"))
+        GLib.set_application_name(_("Store"))
 
-        self.main_window.set_icon_name("mintinstall")
+        self.main_window.set_icon_name("softwarecenter")
         self.main_window.connect("delete_event", self.close_application)
         self.main_window.connect("key-press-event", self.on_keypress)
         self.main_window.connect("button-press-event", self.on_buttonpress)
@@ -1962,8 +1966,8 @@ class Application(Gtk.Application):
             print(e)
 
         dlg.set_version("8.2.9")
-        dlg.set_icon_name("mintinstall")
-        dlg.set_logo_icon_name("mintinstall")
+        dlg.set_icon_name("softwarecenter")
+        dlg.set_logo_icon_name("softwarecenter")
 
         def close(w, res):
             if res == Gtk.ResponseType.CANCEL or res == Gtk.ResponseType.DELETE_EVENT:
