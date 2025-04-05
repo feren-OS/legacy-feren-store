@@ -1,6 +1,0 @@
-#!/usr/bin/python3
-
-import subprocess
-import sys
-
-subprocess.call(["/usr/lib/feren-store/feren-store.py", "install"] + sys.argv[1:])

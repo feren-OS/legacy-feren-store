@@ -1,5 +1,0 @@
-#!/usr/bin/python3
-
-import subprocess
-
-subprocess.call("/usr/lib/feren-store/feren-store-update-pkgcache.py")
