@@ -341,37 +341,23 @@ class ScreenshotDownloader(threading.Thread):
 
             return
         try:
-            link = "https://community.linuxmint.com/img/screenshots/%s.png" % self.pkginfo.name
-            if requests.head(link, timeout=5).status_code < 400:
-                num_screenshots += 1
-
-                local_name = os.path.join(SCREENSHOT_DIR, "%s_%s.png" % (self.pkginfo.name, num_screenshots))
-                self.save_to_file(link, None, local_name)
-
-                self.add_screenshot(self.pkginfo, local_name, num_screenshots)
-        except Exception as e:
-            print(e)
-
-        try:
-            # Add additional screenshots from Debian
             from bs4 import BeautifulSoup
-            page = BeautifulSoup(urllib.request.urlopen("http://screenshots.debian.net/package/%s" % self.pkginfo.name, timeout=5), "lxml")
-            images = page.findAll('img')
+            page = BeautifulSoup(urllib.request.urlopen("https://screenshots.debian.net/package/%s" % self.pkginfo.name, timeout=5), "lxml")
+            images = page.findAll(href=re.compile(r"/shrine/screenshot[/\d\w]*large-[\w\d]*.png"))
             for image in images:
                 if num_screenshots >= 4:
                     break
-                if image['src'].startswith('/screenshots'):
-                    num_screenshots += 1
 
-                    thumb = "http://screenshots.debian.net%s" % image['src']
-                    link = thumb.replace("_small", "_large")
+                num_screenshots += 1
 
-                    local_name = os.path.join(SCREENSHOT_DIR, "%s_%s.png" % (self.pkginfo.name, num_screenshots))
-                    self.save_to_file(link, None, local_name)
+                thumb = "https://screenshots.debian.net%s" % image['href']
+                local_name = os.path.join(SCREENSHOT_DIR, "%s_%s.png" % (self.pkginfo.name, num_screenshots))
+                self.save_to_file(thumb, None, local_name)
 
-                    self.add_screenshot(self.pkginfo, local_name, num_screenshots)
+                self.add_screenshot(self.pkginfo, local_name, num_screenshots)
         except Exception as e:
-            pass
+            print("TEST", e)
+
         
         if self.settings.get_boolean(HAMONIKR_SCREENSHOTS):
             try:
