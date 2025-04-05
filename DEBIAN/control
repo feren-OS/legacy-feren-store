@@ -1,9 +1,9 @@
 Package: feren-store
-Version: 2025.02.0.0.2+ubrel3
+Version: 2025.03.0.0.0+ubrel3
 Architecture: all
 Maintainer: Feren OS Team <ferenos@outlook.com>
 Pre-Depends: ca-certificates (>= 20210101), feren-store-repos
-Depends: flatpak, gir1.2-flatpak-1.0, feren-flatpak-management, gdebi, python3 (>= 3.4), python3-bs4, python3-gi-cairo, python3-lxml, python3-setproctitle, python3-xapp, gir1.2-appstream-1.0, gir1.2-gdkpixbuf-2.0, gir1.2-glib-2.0, gir1.2-gtk-3.0, gir1.2-xapp-1.0, libgtk3-perl, mint-common (>= 2.2.4), app-install-data
+Depends: flatpak, gir1.2-flatpak-1.0, feren-flatpak-management, gdebi, feren-wine-direct, python3 (>= 3.4), python3-bs4, python3-gi-cairo, python3-lxml, python3-setproctitle, python3-xapp, gir1.2-appstream-1.0, gir1.2-gdkpixbuf-2.0, gir1.2-glib-2.0, gir1.2-gtk-3.0, gir1.2-xapp-1.0, libgtk3-perl, mint-common (>= 2.2.4), app-install-data
 Recommends: xdg-desktop-portal-gtk
 Section: admin
 Priority: optional
