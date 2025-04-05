@@ -1137,7 +1137,7 @@ class Application(Gtk.Application):
         self.main_window.connect("button-press-event", self.on_buttonpress)
 
         theme = Gtk.IconTheme.get_default()
-        for icon_name in ["application-x-deb", "file-roller"]:
+        for icon_name in ["feren-store-missing"]:
             if theme.has_icon(icon_name):
                 iconInfo = theme.lookup_icon_for_scale(icon_name,
                                                        LIST_ICON_SIZE,
