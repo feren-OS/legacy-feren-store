@@ -30,5 +30,20 @@
       <summary>Check this against the FlatpakInstallation to determine if we need to refresh the cache at startup.</summary>
       <description>name::uri::disabled tuples</description>
     </key>
+    <key type="s" name="search-package-type-preference">
+      <choices>
+        <choice value="all"/>
+        <choice value="apt"/>
+        <choice value="flatpak"/>
+      </choices>
+      <default>"all"</default>
+      <summary></summary>
+      <description></description>
+    </key>
+    <key type="b" name="allow-unverified-flatpaks">
+      <default>false</default>
+      <summary>If true, unverified Flatpaks will be shown.</summary>
+      <description></description>
+    </key>
   </schema>
 </schemalist>
