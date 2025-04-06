@@ -69,32 +69,34 @@ gettext.textdomain(APP)
 _ = gettext.gettext
 
 import setproctitle
-setproctitle.setproctitle("mintinstall")
+setproctitle.setproctitle("feren-store")
 
 Gtk.IconTheme.get_default().append_search_path("/usr/share/linuxmint/mintinstall")
 
 # List of aliases
 ALIASES = {}
 ALIASES['spotify-client'] = "Spotify"
-ALIASES['steam-installer'] = "Steam"
-ALIASES['minecraft-launcher'] = "Minecraft"
-ALIASES['virtualbox-qt'] = "Virtualbox " # Added a space to force alias
-ALIASES['virtualbox'] = "Virtualbox (base)"
-ALIASES['sublime-text'] = "Sublime"
-ALIASES['mint-meta-codecs'] = _("Multimedia Codecs")
-ALIASES['mint-meta-codecs-kde'] = _("Multimedia Codecs for KDE")
-ALIASES['mint-meta-debian-codecs'] = _("Multimedia Codecs")
-ALIASES['firefox'] = "Firefox"
+ALIASES['steam-launcher'] = "Steam"
+ALIASES['minecraft-installer'] = "Minecraft"
+ALIASES['virtualbox-qt'] = "VirtualBox"
+ALIASES['virtualbox'] = "VirtualBox (base)"
+ALIASES['sublime-text'] = "Sublime Text"
+ALIASES['feren-meta-codecs'] = _("Multimedia Codecs")
 ALIASES['vlc'] = "VLC"
-ALIASES['mpv'] = "Mpv"
-ALIASES['gimp'] = "Gimp"
+ALIASES['gimp'] = "GIMP"
 ALIASES['gnome-maps'] = "GNOME Maps"
-ALIASES['thunderbird'] = "Thunderbird"
-ALIASES['pia-manager'] = "PIA Manager"
 ALIASES['skypeforlinux'] = "Skype"
 ALIASES['google-earth-pro-stable'] = "Google Earth"
 ALIASES['whatsapp-desktop'] = "WhatsApp"
-ALIASES['wine-installer'] = "Wine"
+ALIASES['google-chrome-stable'] = "Google Chrome"
+ALIASES['vivaldi-stable'] = "Vivaldi"
+ALIASES['winehq-stable'] = "Wine"
+ALIASES['wine'] = "Wine (Older Version)"
+ALIASES['feren-transfer-tool'] = "Transfer Tool"
+ALIASES['feren-maintenance'] = "Feren OS System Maintenance"
+ALIASES['feren-store'] = "Feren Store"
+ALIASES['pantheon-photos'] = "Photos"
+ALIASES['kclock'] = "Clock"
 
 libdir = os.path.join("/usr/lib/linuxmint/mintinstall")
 
@@ -103,10 +105,6 @@ with open(os.path.join(libdir, "apt_flatpak_match_data.info")) as f:
 
 FLATPAK_EQUIVS = match_data["apt_flatpak_matches"]
 DEB_EQUIVS = dict((v, k) for k,v in FLATPAK_EQUIVS.items())
-
-pkg_tile_ui = "/usr/share/linuxmint/mintinstall/mintinstall.gresource"
-UI_RESOURCES = Gio.Resource.load(pkg_tile_ui)
-UI_RESOURCES._register()
 
 KB = 1000
 MB = KB * 1000
@@ -323,7 +321,7 @@ class BannerTile(Gtk.FlowBoxChild):
         self.background = background
         self.color = color
 
-        self.image_uri = (f"/usr/share/linuxmint/mintinstall/featured/{name}.svg")
+        self.image_uri = (f"/usr/share/linuxmint/mintinstall/featured/{name}.png")
 
         css = """
 #BannerTile {
@@ -369,7 +367,9 @@ class BannerTile(Gtk.FlowBoxChild):
         label_summary.set_name("BannerSummary")
         label_summary.get_style_context().add_provider(style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
-        image = Gtk.Image.new_from_file(self.image_uri)
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file(self.image_uri)
+        pixbuf = pixbuf.scale_simple(128, 128, GdkPixbuf.InterpType.BILINEAR)
+        image = Gtk.Image.new_from_pixbuf(pixbuf)
 
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12, halign=Gtk.Align.START)
         vbox.get_style_context().add_provider(style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
@@ -418,7 +418,10 @@ class PackageTile(Gtk.FlowBoxChild):
                 self.pkg_category = pkginfo.categories[1]
 
 
-        self.builder = Gtk.Builder.new_from_resource("/com/linuxmint/mintinstall/package-tile.glade")
+        glade_file = "/usr/share/linuxmint/mintinstall/package-tile.glade"
+
+        self.builder = Gtk.Builder()
+        self.builder.add_from_file(glade_file)
 
         self.overlay = self.builder.get_object("vertical_package_tile")
         self.button.add(self.overlay)
@@ -810,7 +813,7 @@ class Application(Gtk.Application):
 
         # If it's less than our threshold than consider us 'low res'. The workarea being used is in
         # app pixels, so hidpi will also be affected here regardless of device resolution.
-        if height < 800:
+        if height < 710:
             print("MintInstall: low resolution detected (%dpx height), limiting window height." % (height))
             return True
 
@@ -824,13 +827,15 @@ class Application(Gtk.Application):
         # Build the GUI
         glade_file = "/usr/share/linuxmint/mintinstall/mintinstall.glade"
 
-        self.builder = Gtk.Builder.new_from_resource("/com/linuxmint/mintinstall/mintinstall.glade")
+        self.builder = Gtk.Builder()
+        self.builder.set_translation_domain(APP)
+        self.builder.add_from_file(glade_file)
 
         self.main_window = self.builder.get_object("main_window")
-        self.main_window.set_title(_("Software Manager"))
-        GLib.set_application_name(_("Software Manager"))
+        self.main_window.set_title(_("Store"))
+        GLib.set_application_name(_("Store"))
 
-        self.main_window.set_icon_name("mintinstall")
+        self.main_window.set_icon_name("softwarecenter")
         self.main_window.connect("delete_event", self.close_application)
         self.main_window.connect("key-press-event", self.on_keypress)
         self.main_window.connect("button-press-event", self.on_buttonpress)
@@ -881,11 +886,6 @@ class Application(Gtk.Application):
         self.refresh_cache_menuitem.show()
         self.refresh_cache_menuitem.set_sensitive(False)
         submenu.append(self.refresh_cache_menuitem)
-
-        software_sources_menuitem = Gtk.MenuItem(label=_("Software sources"))
-        software_sources_menuitem.connect("activate", self.open_software_sources)
-        software_sources_menuitem.show()
-        submenu.append(software_sources_menuitem)
 
         self.prefs_menuitem = Gtk.MenuItem(label=_("Preferences"))
         self.prefs_menuitem.connect("activate", self.on_prefs_clicked)
@@ -1388,15 +1388,6 @@ class Application(Gtk.Application):
         self.load_featured()
         self.load_top_rated()
 
-    def open_software_sources(self,_):
-        # Opens Mint's Software Sources and refreshes the cache afterwards
-        def on_process_exited(proc, result):
-            proc.wait_finish(result)
-            self.refresh_cache()
-        p = Gio.Subprocess.new(["mintsources"], 0)
-        # Add a callback when we exit mintsources
-        p.wait_async(None, on_process_exited)
-
     def should_show_pkginfo(self, pkginfo):
         if pkginfo.pkg_hash.startswith("apt"):
             return True
@@ -1791,8 +1782,8 @@ class Application(Gtk.Application):
             print(e)
 
         dlg.set_version("8.3.7")
-        dlg.set_icon_name("mintinstall")
-        dlg.set_logo_icon_name("mintinstall")
+        dlg.set_icon_name("softwarecenter")
+        dlg.set_logo_icon_name("softwarecenter")
 
         def close(w, res):
             if res == Gtk.ResponseType.CANCEL or res == Gtk.ResponseType.DELETE_EVENT:

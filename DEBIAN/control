@@ -1,12 +1,13 @@
 Package: mintinstall
-Version: 8.3.7
+Version: 8.3.7+feren2025.03.0.0.0
 Architecture: all
-Maintainer: Linux Mint <root@linuxmint.com>
+Maintainer: Feren OS Team <ferenos@outlook.com>
 Installed-Size: 1320
 Pre-Depends: ca-certificates (>= 20210101)
 Depends: python3 (>= 3.4), python3-bs4, python3-gi-cairo, python3-lxml, python3-setproctitle, python3-xapp, gir1.2-gdkpixbuf-2.0, gir1.2-glib-2.0, gir1.2-gtk-3.0, gir1.2-xapp-1.0, libgtk3-perl, mint-common (>= 2.2.4), app-install-data
 Recommends: gir1.2-flatpak-1.0, flatpak, xdg-desktop-portal-gtk
+Conflicts: feren-store (<= 2025.03.0.0.9)
 Section: admin
 Priority: optional
-Description: Software Manager
+Description: Legacy Linux Mint Software Manager fork for Feren OS
  A software manager to easily install new applications.

@@ -14,7 +14,7 @@ import prefs
 
 SCREENSHOT_DIR = os.path.join(GLib.get_user_cache_dir(), "mintinstall", "screenshots")
 FLATHUB_MEDIA_BASE_URL = "https://dl.flathub.org/media/"
-FALLBACK_PACKAGE_ICON_PATH = "/usr/share/linuxmint/mintinstall/data/fallback-package-icon.svg"
+FALLBACK_PACKAGE_ICON_PATH = "/usr/share/linuxmint/mintinstall/data/store-missing-icon.svg"
 
 ADDON_ICON_SIZE = 24
 LIST_ICON_SIZE = 48
@@ -248,19 +248,6 @@ class ScreenshotDownloader():
 
             return
         try:
-            link = "https://community.linuxmint.com/img/screenshots/%s.png" % self.pkginfo.name
-            if requests.head(link, timeout=5).status_code < 400:
-                num_screenshots += 1
-
-                local_name = os.path.join(SCREENSHOT_DIR, "%s_%s.png" % (self.pkginfo.name, num_screenshots))
-                self.save_to_file(link, None, local_name)
-
-                self.add_screenshot(self.pkginfo, local_name, num_screenshots)
-        except Exception as e:
-            print(e)
-
-        try:
-            # Add additional screenshots from Debian
             from bs4 import BeautifulSoup
             page = BeautifulSoup(urllib.request.urlopen("https://screenshots.debian.net/package/%s" % self.pkginfo.name, timeout=5), "lxml")
             images = page.findAll(href=re.compile(r"/shrine/screenshot[/\d\w]*large-[\w\d]*.png"))
@@ -277,6 +264,20 @@ class ScreenshotDownloader():
                 self.add_screenshot(self.pkginfo, local_name, num_screenshots)
         except Exception as e:
             pass
+
+        if num_screenshots < 4:
+            try:
+                # Add additional images from Linux Mint
+                link = "https://community.linuxmint.com/img/screenshots/%s.png" % self.pkginfo.name
+                if requests.head(link, timeout=5).status_code < 400:
+                    num_screenshots += 1
+
+                    local_name = os.path.join(SCREENSHOT_DIR, "%s_%s.png" % (self.pkginfo.name, num_screenshots))
+                    self.save_to_file(link, None, local_name)
+
+                    self.add_screenshot(self.pkginfo, local_name, num_screenshots)
+            except Exception as e:
+                print(e)
 
         if self.settings.get_boolean(prefs.HAMONIKR_SCREENSHOTS):
             try:

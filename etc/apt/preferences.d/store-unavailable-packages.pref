@@ -1,0 +1,16 @@
+# Unavailable Packages - these are packages that are not available in Feren OS any longer. It'll be replaced by a much better rendition of this file when New Feren OS Store is done.
+
+#chromium-browser - replaced by chromium via the Browser Manager
+Package: chromium-browser
+Pin: release o=Ubuntu
+Pin-Priority: -10
+
+#chromium-chromedriver - replaced by chromium via the Browser Manager
+Package: chromium-chromedriver
+Pin: release o=Ubuntu
+Pin-Priority: -10
+
+#qt5-gtk2-platformtheme - no longer available (broken)
+Package: qt5-gtk2-platformtheme
+Pin: release o=Ubuntu
+Pin-Priority: -10
